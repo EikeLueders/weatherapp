@@ -1,0 +1,13 @@
+defaults: &defaults
+  openWeatherApiKey: "835486a01aa0f5103e6cf8d25967d16d"
+  flickrApiKey: "6c729fe94d78420d2f8cf019bd9e2ce0"
+  flickrApiSharedSecret: "e5c34e824a45667e"
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults
