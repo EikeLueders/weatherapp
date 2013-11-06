@@ -9,7 +9,7 @@ body {
 }
 
 div#background,
-div#background  img {
+div#background img {
 	position: absolute;
 	z-index: -1;
 	width: 100%;
@@ -19,7 +19,7 @@ div#background  img {
 }
 
 div#weatherdata {
-	margin: 5px
+	margin: 5px;
 }
 
 div#weatherdata_currently,
