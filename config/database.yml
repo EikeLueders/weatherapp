@@ -60,7 +60,7 @@ production:
 #  username: postgres
 #  password: root
 #  host: localhost
-	adapter: sqlite3
+  adapter: sqlite3
   encoding: unicode
-  database: db/development.sql
+  database: db/production.sql
   pool: 5
