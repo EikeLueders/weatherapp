@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+ruby '2.0.0'
+
 gem 'flickraw'
 gem 'typhoeus'
 
@@ -7,7 +9,8 @@ gem 'typhoeus'
 gem 'rails', '4.0.1'
 
 # Use postgresql as the database for Active Record
-gem 'pg'
+# gem 'pg'
+gem 'sqlite3'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
