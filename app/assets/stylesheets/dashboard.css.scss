@@ -1,3 +1,145 @@
 // Place all the styles related to the dashboard controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+body {
+	margin: 0;
+	padding: 0;
+	font-family: 'Advent Pro';
+}
+
+div#background,
+div#background  img {
+	position: absolute;
+	z-index: -1;
+	width: 100%;
+	height: auto;
+	top: 0;
+	left: 0;
+}
+
+div#weatherdata {
+	margin: 5px
+}
+
+div#weatherdata_currently,
+div#weatherdata_forecast_hourly,
+div#weatherdata_forecast_daily,
+div#locations {
+	float: left;
+	padding: 5px;
+	background-color: rgba(0,0,0,0.5);
+	color: rgba(255,255,255,1);
+	margin: 5px;
+}
+
+div#locations {
+	background-color: rgba(0,0,0,0.3);
+	padding: 5px 30px 5px 5px;
+	font-size: 30px;
+}
+
+
+div.selectedLocation {
+	font-size: 50px;
+}
+div.selectedLocation span {
+	font-size: 20px;
+}
+div.location span {
+	font-size: 15px;
+}
+
+
+br.clear {
+	clear: both;
+}
+
+div#temp,
+div#temp_min,
+div#temp_max {
+	line-height: 60px;
+	float: left;
+	margin-right: 20px;
+}
+
+div#temp {
+	font-size: 60px;
+}
+
+div#temp_min,
+div#temp_max {
+	font-size: 20px;
+}
+
+.container {
+	clear: both;
+}
+.text_margin_left_l {
+	margin-left: 20px;
+}
+.text_margin_right_l {
+	margin-right: 20px;
+}
+.text_margin_left_m {
+	margin-left: 10px;
+}
+.text_margin_right_m {
+	margin-right: 10px;
+}
+.text_margin_left_s {
+	margin-left: 5px;
+}
+.text_margin_right_s {
+	margin-right: 5px;
+}
+.text_margin_left_xs {
+	margin-left: 2px;
+}
+.text_margin_right_xs {
+	margin-right: 2px;
+}
+
+
+
+
+.text_float_left {
+	float: left;
+}
+
+.text_lineheight_60 {
+	line-height: 60px;
+}
+
+.text_lineheight_50 {
+	line-height: 50px;
+}
+
+.text_lineheight_40 {
+	line-height: 40px;
+}
+
+.text_xl {
+	font-size: 60px;
+}
+
+.text_l {
+	font-size: 50px;
+}
+
+.text_m {
+	font-size: 40px;
+}
+
+.text_s {
+	font-size: 30px;
+}
+
+.text_xs {
+	font-size: 20px;
+}
+
+.text_xxs {
+	font-size: 10px;
+}
+
