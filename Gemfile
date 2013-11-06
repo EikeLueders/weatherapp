@@ -2,15 +2,18 @@ source 'https://rubygems.org'
 
 ruby '2.0.0'
 
+group :development, :test do
+  gem 'sqlite3'
+end
+group :production do
+  gem 'pg'
+end
+
 gem 'flickraw'
 gem 'typhoeus'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.1'
-
-# Use postgresql as the database for Active Record
-# gem 'pg'
-gem 'sqlite3'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
