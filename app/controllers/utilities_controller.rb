@@ -3,9 +3,11 @@ require 'flickraw'
 
 class UtilitiesController < ApplicationController
 
-	def getFlickrImage
+	def getFlickrImages
 		tags = params[:tags];
 		time = params[:time];
+		width = params[:width] || 1280;
+		height = params[:height] || 800;
 		
 #		bboxOffset = 2;
 		
@@ -30,19 +32,34 @@ class UtilitiesController < ApplicationController
       season = "autumn"
     end
 		  
-		list   = flickr.photos.search(:content_type => 1, :tags => tags + "," + season, :tag_mode => "all")
-		puts "c:" + list.count.to_s
-
-    sizes = flickr.photos.getSizes :photo_id => list[Random.rand(0...list.count)].id
+		photos = flickr.photos.search(:content_type => 1, :tags => tags + "," + season, :tag_mode => "all", :extras => "url_l,url_o")
+		puts "c:" + photos.count.to_s
+		
+		usable = Array.new;
+		
+		photos.each do |i|
+            
+		  if defined?(i.width_l)
+        if i.width_l.to_i < width.to_i
+          usable << i.url_l;
+        elsif defined?(i.width_o) 
+          usable << i.url_o;
+        end
+      elsif defined?(i.width_o)
+        usable << i.url_o;
+      end   
+		end
+		  
+#    sizes = flickr.photos.getSizes :photo_id => list[Random.rand(0...list.count)].id
 		
 		respond_to do |format|
-			format.json { render json: sizes }
+			format.json { render json: usable }
    	end
 	end
 	
 	def getWeatherData
-		lat = params[:lat]
-		lon = params[:lon]
+		lat = params[:latitude]
+		lon = params[:longitude]
 		lang = params[:lang] || "en"
 		langs = ["en", "ru", "it", "sp", "ua", "de", "pt", "ro", "pl", "fi", "nl", "fr", "bg", "se", "zh_tw", "zh_cn", "tr"]
 		
@@ -58,15 +75,17 @@ class UtilitiesController < ApplicationController
 		  headers: { Accept: "application/json" }
 		)
 		request.run
-
+		
+		result = request.response.body
+	
 		respond_to do |format|
-			format.json { render json: request.response.body }
+			format.json { render json: result }
    	end
 	end
 	
-	def getLocationData
-    lat = params[:lat]
-    lon = params[:lon]
+	def getReverseGeolocation
+    lat = params[:latitude]
+    lon = params[:longitude]
     
     request = Typhoeus::Request.new(
       "http://nominatim.openstreetmap.org/reverse?lat=" + lat.to_s + "&lon=" + lon.to_s + "&format=json",
@@ -75,12 +94,37 @@ class UtilitiesController < ApplicationController
     )
     request.run
     
-    json = JSON.parse(request.response.body)
+    result = JSON.parse(request.response.body)
     
-    puts json
+    result["address"]["lat"] = lat
+    result["address"]["lon"] = lon
+    
+    puts result
 
     respond_to do |format|
-      format.json { render json: json["address"]}
+      format.json { render json: result["address"]}
     end
 	end
+	
+	def getGeolocation
+    query = params[:place]
+    query << ", city"
+    
+    request = Typhoeus::Request.new(
+      "http://nominatim.openstreetmap.org/search/" + CGI::escape(query) + "?addressdetails=1&format=json",
+      method: :get,
+      headers: { Accept: "application/json" }
+    )
+    request.run
+    
+    puts request.response.body
+    
+    json = JSON.parse(request.response.body)
+    
+#    puts json
+
+    respond_to do |format|
+      format.json { render json: json[0]}
+    end
+  end
 end
