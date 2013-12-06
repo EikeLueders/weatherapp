@@ -15,7 +15,7 @@ createTemplateIn = (element = 'weatherdata_current_data', label, value, stylesLa
     c.append($('<div></div>').addClass(stylesValue.join(' ')).html(value))
   c
    
-  
+
 intToTime = (time) ->
   new Date(time * 1000)  
   
@@ -25,18 +25,31 @@ objectToString = (obj, delimiter1 = '=', delimiter2 = '&') ->
     url.push key + delimiter1 + value
   url.join(delimiter2)
   
-load = (location) ->
-#  lang = navigator.language || navigator.userLanguage
   
+setupUI = ->
   # load location list from webstorage
   locations = localStorage.getItem 'locations'
   if locations?
     locations = JSON.parse locations
     for index, loc of locations
-      $('#locations').append(
-        ($('<div/>').attr('id', 'locationItem_' + index).addClass('location')).html(loc.city + ', ').append($('<span/>').html(loc.country))
-      )
+      addLocationToUI index, loc
+  
+addLocationToUI = (index, location, isCurrentLocation = false) ->
+  @addHTML = (index, location, isCurrentLocation = false) ->
+    ($('<div/>').attr('id', if isCurrentLocation then 'currentLocation' else 'locationItem_' + index).addClass('location')).append($('<span/>').addClass('locationCityName').html(location.city + ', ')).append($('<span/>').html(location.country)).bind 'click', ->
+      # console.log $(this).attr('id').split('_')[1]
+      $('.selectedLocation').removeClass('selectedLocation').addClass('location');
+      $(this).addClass('selectedLocation')
+      getWeatherForPlace $(this).attr('id')
       
+  if isCurrentLocation
+    $('#locations').prepend(@addHTML index, location, isCurrentLocation)
+  else
+    $('#locations').append(@addHTML index, location, isCurrentLocation)
+  
+  
+initWithLocation = (location) ->
+#  lang = navigator.language || navigator.userLanguage
   console.log location
   # get location details for current position by reverse geocoding 
   $.get '/utilities/getReverseGeolocation.json?latitude=' + location.coords.latitude + '&longitude=' + location.coords.longitude, (address) ->
@@ -50,15 +63,18 @@ load = (location) ->
     localStorage.setItem  'currentLocation',JSON.stringify location
       
     getWeatherForLocation location
-    $('#locations').prepend(
-      ($('<div/>').attr('id', 'currentLocationItem').addClass('selectedLocation')).html(address.city + ', ').append($('<span/>').html(address.country))
-    )
+    addLocationToUI -1, location, true
+    
+    $('#currentLocation').addClass('selectedLocation')
+    # $('#locations').prepend(
+      # ($('<div/>').attr('id', 'currentLocationItem').addClass('selectedLocation')).html(address.city + ', ').append($('<span/>').html(address.country))
+    # )
 
 getWeatherForPlace = (place) ->
   if place.split('_')[1]?
     location = loadLocation place.split('_')[1]
   else 
-    location = JSON.parse loadLocation 'currentLocation'
+    location = loadLocation 'currentLocation'
 
   console.log location
 #  $.get '/utilities/getGeolocation.json?place=' + place.join(', '), (location) ->
@@ -127,40 +143,94 @@ saveLocation = (location) ->
     data = []
   
   data.push location
-    
-  localStorage.setItem  'locations',JSON.serialize data
+  localStorage.setItem 'locations', JSON.stringify data
+  addLocationToUI data.length-1, location
 
 loadLocation = (index) ->
+  if index is 'currentLocation'
+    return JSON.parse localStorage.getItem 'currentLocation'
+  else
+    data = localStorage.getItem 'locations'
+    if data?
+      data = JSON.parse data
+    else
+      false
+    
+    data[index]
+  
+loadLocations = ->
   data = localStorage.getItem 'locations'
   if data?
     data = JSON.parse data
   else
     false
   
-  data[index]
+  data
+  
+searchForLocationByName = (name) ->
+  if name.length > 0
+    $.get '/utilities/getGeolocation.json?place=' + name, (location) ->
+      if location isnt null
+        l = 
+          city: location.address.city
+          country: location.address.country
+          lat: location.lat
+          lon: location.lon
+          
+        saveLocation l
+        console.log location
+        
+        toggleOverlayWithHeight 200
 
-      
+toggleOverlayWithHeight = (height) ->
+  $('#overlay').css('height', height)
+  $('#overlay').css('top', -height)
+  if $('#overlay').attr('visible') is 'false'
+    $('#overlay').attr 'visible', 'true'
+    $('#overlay').transition {y:"+=" + height}, 1000, 'snap', ->
+      console.log 1
+  else
+    $('#overlay').attr 'visible', 'false'
+    $('#overlay').transition {y:"-=" + height}, 1000, 'snap', ->
+      console.log 2
+
+showLocationSearch = ->
+  # clear overlay
+  $('#overlay').html '<i class="fa fa-spinner fa-3x fa-spin overlaySpinner"></i>'
+  
+  $.get '/dashboard/searchform.html', (html) ->
+    $('#overlay').html ''
+    $('#overlay').append(html)
+    
+showUserProfile = ->
+  # clear overlay
+  $('#overlay').html '<i class="fa fa-spinner fa-3x fa-spin overlaySpinner"></i>'
+  
+  $.get '/dashboard/profile.html', (html) ->
+    $('#overlay').html ''
+    $('#overlay').append(html)
+
 $ ->
   # setup localstorage data
   localStorage.removeItem 'locations'
   locations = [
-    {city: "Stockholm", country: "Sweden", lat: 59.3251172, lon: 18.0710935},
+    # {city: "Stockholm", country: "Sweden", lat: 59.3251172, lon: 18.0710935},
     {city: "Berlin", country: "Germany", lat: 52.5170365, lon: 13.3888599}
   ]
   localStorage.setItem 'locations',JSON.stringify locations
 
   userLang = navigator.language || navigator.userLanguage
-  load({coords:{latitude: 65.6141768, longitude: 22.17783859}})
-              
-  $('#settings').bind 'click', ->
-    # show settings
+  setupUI()
+  initWithLocation({coords:{latitude: 65.6141768, longitude: 22.17783859}})
   
-  $('.location, .currentLocation').bind 'click', ->
-    console.log $(this).attr('id').split('_')[1]
-    $('.selectedLocation').removeClass('selectedLocation').addClass('location');
-    $(this).addClass('selectedLocation')
+
+  $('#showProfileIcon i').bind 'click', ->
+    showUserProfile()
+    toggleOverlayWithHeight(200)
     
-    getWeatherForPlace $(this).attr('id')
+  $('#addLocationIcon i').bind 'click', ->
+    showLocationSearch()
+    toggleOverlayWithHeight(200)
   
 #  navigator.geolocation.getCurrentPosition load
   true

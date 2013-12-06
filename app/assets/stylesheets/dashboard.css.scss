@@ -4,6 +4,9 @@
 
 $background-color-primary: rgba(0,0,0,0.5);
 $background-color-secondary: rgba(0,0,0,0.3);
+$background-color-dark: rgba(0,0,0,0.8);
+$background-color-light: rgba(255,255,255,0.95);
+$color-light: rgba(255,255,255,0.6);
 $text-color: rgba(255,255,255,1);
 $box-padding: 5px;
 $box-margin: 5px;
@@ -25,6 +28,8 @@ $margin-xl: 20px;
 $margin-l: 10px;
 $margin-m: 5px;
 $margin-s: 2px;
+
+$border-radius-l: 10px;
 
 
 body {
@@ -61,6 +66,17 @@ div#menu {
 div#menu div {
   float: right;
   margin-right: $margin-l;
+  margin-left: $margin-l;
+  font-size: $font-size-s;
+  cursor: pointer;
+}
+
+div#menu div#addLocationIcon {
+  float: left;
+} 
+
+div#menu div#addLocationIcon i {
+  color: $text-color;
 }
 
 div#weatherdata {
@@ -83,6 +99,8 @@ div#locations {
 	background-color: $background-color-secondary;
 	padding: 5px 30px 5px 5px;
 	font-size: $font-size-s;
+	overflow-x: hidden;
+	max-width: 300px;
 }
 
 div.selectedLocation,
@@ -90,11 +108,11 @@ div.location {
   cursor: pointer;
 }
 
-div.selectedLocation {
-	font-size: $font-size-xl;
-}
 div.selectedLocation span {
 	font-size: $font-size-m;
+}
+div.selectedLocation span.locationCityName {
+  font-size: $font-size-xl;
 }
 div.location span {
 	font-size: $font-size-s;
@@ -129,6 +147,161 @@ div#temp_max {
 .container {
 	float: left;
 }
+
+div#overlay {
+  height: 400px;
+  position: absolute;
+  z-index: 2;
+  background-color: $background-color-light;
+  top: -400px;
+  -webkit-border-bottom-right-radius: $border-radius-l;
+  -webkit-border-bottom-left-radius: $border-radius-l;
+  -moz-border-radius-bottomright: $border-radius-l;
+  -moz-border-radius-bottomleft: $border-radius-l;
+  border-bottom-right-radius: $border-radius-l;
+  border-bottom-left-radius: $border-radius-l;
+}
+div#overlay i.overlaySpinner {
+  bottom: 50px;
+  position: absolute;
+  left: 50%;
+  margin-left: -21px;
+}
+
+@media (max-width: 640px) {
+  div#overlay {
+    width: 100%;
+    left: 0;
+    margin-left: 0;
+  }
+}
+
+@media (min-width: 641px) {
+  div#overlay {
+    width: 640px;
+    left: 50%;
+    margin-left: -320px;
+  }
+}
+
+
+div#locationSearchContainer {
+  margin-top: 70px;
+  text-align: center;
+  font-size: 0;
+}
+
+div#locationSearchContainer input#locationSearchField {
+  border: 5px solid #e0e0e0;
+  font-size: $font-size-m;
+  margin: 0;
+  padding: 10px 10px;
+}
+div#locationSearchContainer button {
+  border: 5px solid #e0e0e0;
+  font-size: $font-size-m;
+  margin: 0;
+  padding: 10px 15px;
+}
+div#locationSearchContainer button i {
+  font-size: $font-size-m;
+}
+div#locationSearchContainer button#useCurrentLocationButton {
+  border-right: none;
+  color: gray;
+  background-color: white;
+  -webkit-border-top-left-radius: $border-radius-l;
+  -webkit-border-bottom-left-radius: $border-radius-l;
+  -moz-border-radius-topleft: $border-radius-l;
+  -moz-border-radius-bottomleft: $border-radius-l;
+  border-top-left-radius: $border-radius-l;
+  border-bottom-left-radius: $border-radius-l;
+}
+div#locationSearchContainer button#addLocationButton {
+  border-left: none;
+  color: gray;
+  background-color: white;
+  -webkit-border-top-right-radius: $border-radius-l;
+  -webkit-border-bottom-right-radius: $border-radius-l;
+  -moz-border-radius-topright: $border-radius-l;
+  -moz-border-radius-bottomright: $border-radius-l;
+  border-top-right-radius: $border-radius-l;
+  border-bottom-right-radius: $border-radius-l;
+}
+
+div#profile {
+  margin: 10px;
+  text-align: center;
+}
+
+div#profile div.headline {
+  margin-top: 10px;
+  display: inline-block;
+}
+
+div#profile img#userimage,
+div#profile div#username {
+  border: 5px solid #e0e0e0;
+  float: left;
+}
+div#profile img#userimage {
+  -webkit-border-top-left-radius: $border-radius-l;
+  -webkit-border-bottom-left-radius: $border-radius-l;
+  -moz-border-radius-topleft: $border-radius-l;
+  -moz-border-radius-bottomleft: $border-radius-l;
+  border-top-left-radius: $border-radius-l;
+  border-bottom-left-radius: $border-radius-l;
+}
+div#profile div#username {
+  line-height: $line-height-l;
+  font-size: $font-size-m;
+  padding: 0 10px;
+  -webkit-border-top-right-radius: $border-radius-l;
+  -webkit-border-bottom-right-radius: $border-radius-l;
+  -moz-border-radius-topright: $border-radius-l;
+  -moz-border-radius-bottomright: $border-radius-l;
+  border-top-right-radius: $border-radius-l;
+  border-bottom-right-radius: $border-radius-l;
+}
+div#profile div#welcome {
+  padding: 0 10px;
+  line-height: $line-height-xl;
+  font-size: $font-size-s;
+  float: left;
+}
+
+
+a#sign_out,
+a#sign_out:visited,
+a#sign_out:active,
+a#sign_out:hover {
+  color: gray;
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  margin-left: -22px;
+}
+a#sign_out:hover {
+  color: #d0d0d0;
+}
+
+
+a#sign_in,
+a#sign_in:visited,
+a#sign_in:active,
+a#sign_in:hover {
+  color: gray;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -27.5px;
+  margin-top: -27.5px;
+}
+a#sign_in:hover {
+  color: #d0d0d0;
+}
+
+
 .text_margin_left_l {
 	margin-left: $margin-xl;
 }

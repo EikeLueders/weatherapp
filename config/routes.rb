@@ -5,12 +5,19 @@ Weatherapp::Application.routes.draw do
   get "utilities/getReverseGeolocation"
   get "utilities/getGeolocation"
   
+  get 'dashboard/searchform', to: 'dashboard#show_search_form'
+  get 'dashboard/profile', to: 'dashboard#show_user_profile'
+  
+  get 'auth/:provider/callback', to: 'sessions#create'
+  get 'auth/failure', to: redirect('/')
+  get 'signout', to: 'sessions#destroy', as: 'signout'
+  
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
   root 'dashboard#index'
-
+  
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

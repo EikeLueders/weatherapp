@@ -41,6 +41,11 @@ group :doc do
   gem 'sdoc', require: false
 end
 
+gem 'font-awesome-sass'
+gem 'omniauth-facebook'
+
+#gem 'oauth2'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.2'
 

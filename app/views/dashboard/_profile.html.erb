@@ -1,0 +1,15 @@
+
+<% if current_user %>
+  <div id="profile">
+    <div class="headline">
+      <div id="welcome">Hey, </div>
+      <img id="userimage" src="<%= current_user.image %>" />
+      <div id="username"><%= current_user.name %></div>
+    </div>
+    <br clear="all" />
+    <%= link_to raw('<i class="fa fa-sign-out fa-2x"></i>'), signout_path, id: "sign_out", :title => "Sign out" %>
+  </div>
+  
+<% else %>
+  <%= link_to raw('<i class="fa fa-facebook-square fa-4x"></i>'), "/auth/facebook", id: "sign_in" %>
+<% end %>
