@@ -33,6 +33,11 @@ $margin-s: 2px;
 
 $border-radius-l: 10px;
 
+@media only screen and (max-device-width: 480px) {
+  body {
+    font-width: 300;
+  }
+}
 
 body {
 	margin: 0;
