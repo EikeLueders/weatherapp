@@ -7,6 +7,15 @@
       <div id="username"><%= current_user.name %></div>
     </div>
     <br clear="all" />
+    <br clear="all" />
+    <div class="onoffswitch-outerlabel">Only show background images from the selected location</div>
+    <div class="onoffswitch">
+      <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="backgroundonoffswitch" onclick="changeSetting('background', this.checked)" <% if current_user.only_locations_backgrounds %>checked="checked"<% end %>>
+      <label class="onoffswitch-label" for="backgroundonoffswitch">
+          <div class="onoffswitch-inner"></div>
+          <div class="onoffswitch-switch"></div>
+      </label>
+    </div>
     <%= link_to raw('<i class="fa fa-sign-out fa-2x"></i>'), signout_path, id: "sign_out", :title => "Sign out" %>
   </div>
   

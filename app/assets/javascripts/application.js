@@ -11,4 +11,11 @@
 // about supported directives.
 //
 //= require jquery
-//= require_tree .
+//= require jquery.transit-min
+//= require store
+//= require geolocation
+//= require locations
+//= require moment.min
+//= require classes
+//= require utilities
+//= require dashboard

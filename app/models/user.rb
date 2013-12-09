@@ -1,7 +1,9 @@
 class User < ActiveRecord::Base
+  has_many :locations
+  
   def self.from_omniauth(auth)
     where(auth.slice(:provider, :uid)).first_or_initialize.tap do |user|
-      puts auth.info.image
+      puts "NAME: " + auth.info.name
       
       user.provider = auth.provider
       user.uid = auth.uid

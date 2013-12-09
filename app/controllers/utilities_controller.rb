@@ -4,13 +4,13 @@ require 'flickraw'
 class UtilitiesController < ApplicationController
 
 	def getFlickrImages
+	  city = params[:city];
 		tags = params[:tags];
 		time = params[:time];
 		width = params[:width] || 1280;
 		height = params[:height] || 800;
 		
-#		bboxOffset = 2;
-		
+#		bboxOffset = 2;		
 		#construct bbox
 #		bbox = (lat.to_i - bboxOffset).to_s + "," + (lon.to_i - bboxOffset).to_s + "," + (lat.to_i + bboxOffset).to_s + "," + (lon.to_i + bboxOffset).to_s
 		
@@ -19,8 +19,8 @@ class UtilitiesController < ApplicationController
 
     weatherTime = Time.at(time.to_i)
     
-    puts weatherTime
-    puts weatherTime.month
+    # puts weatherTime
+    # puts weatherTime.month
     
     if (weatherTime.month > 10 || weatherTime.month <= 2) 
       season = "winter"
@@ -31,8 +31,18 @@ class UtilitiesController < ApplicationController
     else
       season = "autumn"
     end
+    
+    if view_context.current_user and view_context.current_user.only_locations_backgrounds or not view_context.current_user
+      tags << ", " << city
+    end
+    
+    tags <<  ", " << season
+    
+    puts "----------------------------------------"
+    puts tags
+    puts "----------------------------------------"
 		  
-		photos = flickr.photos.search(:content_type => 1, :tags => tags + "," + season, :tag_mode => "all", :extras => "url_l,url_o")
+		photos = flickr.photos.search(:content_type => 1, :tags => tags, :tag_mode => "all", :extras => "url_l,url_o")
 		puts "c:" + photos.count.to_s
 		
 		usable = Array.new;

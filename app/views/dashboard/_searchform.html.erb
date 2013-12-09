@@ -1,9 +1,15 @@
-<div id="locationSearchContainer">
-  <button id="useCurrentLocationButton">
-    <i class="fa fa-location-arrow"></i>
-  </button>
-  <input id="locationSearchField" type="text" placeholder="Location...">
-  <button id="addLocationButton">
-    <i class="fa fa-arrow-circle-o-right"></i>
-  </button>
-</div>
+<% if not current_user %>
+  <div id="message">
+    Please log in to add custom locations    
+  </div>
+<% else %>
+  <div id="locationSearchContainer">
+    <button id="useCurrentLocationButton">
+      <i class="fa fa-location-arrow"></i>
+    </button>
+    <input id="locationSearchField" type="text" placeholder="Location...">
+    <button id="addLocationButton">
+      <i class="fa fa-arrow-circle-o-right"></i>
+    </button>
+  </div>
+<% end %>

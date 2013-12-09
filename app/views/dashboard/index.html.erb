@@ -13,15 +13,16 @@
     
   </div>
   <div id="weatherdata_currently">
-    <div class="title">currently</div>
-    <div id="weatherdata_current_data">
-    </div>
+    <div class="title" onclick="$('#weatherdata_current_data').toggle();">currently</div>
+    <div id="weatherdata_current_data"></div>
   </div>
   <div id="weatherdata_forecast_hourly">
-    <div class="title">hourly forecast</div>
+    <div class="title" onclick="$('#weatherdata_hourly_data').toggle();">hourly forecast</div>
+    <div id="weatherdata_hourly_data"></div>
   </div>
   <div id="weatherdata_forecast_daily">
-    <div class="title">daily forecast</div>
+    <div class="title" onclick="$('#weatherdata_daily_data').toggle();">daily forecast</div>
+    <div id="weatherdata_daily_data"></div>
   </div>
 </div>
 

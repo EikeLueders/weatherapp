@@ -8,6 +8,11 @@ Weatherapp::Application.routes.draw do
   get 'dashboard/searchform', to: 'dashboard#show_search_form'
   get 'dashboard/profile', to: 'dashboard#show_user_profile'
   
+  get 'dashboard/addLocation', to: 'dashboard#add_location_to_user'
+  
+  get 'locations', to: 'locations#get_locations_by_currentuser'
+  get 'user/settings', to: 'user#update_settings'
+  
   get 'auth/:provider/callback', to: 'sessions#create'
   get 'auth/failure', to: redirect('/')
   get 'signout', to: 'sessions#destroy', as: 'signout'

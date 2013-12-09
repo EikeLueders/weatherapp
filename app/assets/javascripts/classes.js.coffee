@@ -97,3 +97,22 @@ class @Visibility extends @Value
     
   to_s: ->
     return (@value).toFixed(@round) + ' ' + @format
+    
+    
+class @Location 
+  constructor: (@id, @city, @country, @latitude, @longitude) ->
+    
+  save: ->
+    try 
+      locations = JSON.parse(window.Store.get 'locations')
+    catch 
+      locations = []
+    locations.push this
+    window.Store.set 'locations', JSON.stringify locations
+    return this
+    
+  @find: (id) ->
+    locations = JSON.parse window.Store.get 'locations'
+    for location in locations
+      return location if location.id is parseInt id
+
