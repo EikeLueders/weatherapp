@@ -1,3 +1,7 @@
+
+# require File.dirname(__FILE__) + "/../lib/helper"
+include UtilitiesHelper
+
 class DashboardController < ApplicationController
   def index
 
@@ -17,6 +21,51 @@ class DashboardController < ApplicationController
   def show_user_profile
     respond_to do |format|
       format.html { render :partial => "profile" }
+    end
+  end
+  
+  def show_delete_location
+    respond_to do |format|
+      format.html { render :partial => "removelocation" }
+    end
+  end
+  
+  def upload_locations_file
+    file = params[:locations][:file]
+    contents = file.read
+  
+    locations = []
+  
+    contents.split("\n").each do |line|
+      line = line.strip
+      if line.mb_chars.length > 0
+        location = UtilitiesHelper.getGeolocationHelper line
+        locations << location
+        puts location
+      end
+    end    
+    
+    render json: locations.to_json
+  end
+  
+  def remove_location
+    locationId = params[:id]
+    @current_user = view_context.current_user
+    if @current_user
+      location = Location.find(locationId)
+      if location.user == @current_user
+        location.destroy
+      end
+    
+      status = {
+        :status => "true"
+      }
+      render json: status.to_json
+    else
+      status = {
+        :status => "failed"
+      }
+      render json: status.to_json
     end
   end
   

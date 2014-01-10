@@ -96,9 +96,8 @@ class @Visibility extends @Value
     super value
     
   to_s: ->
-    return (@value).toFixed(@round) + ' ' + @format
-    
-    
+    return (@value).toFixed(@round) + ' ' + @format    
+
 class @Location 
   constructor: (@id, @city, @country, @latitude, @longitude) ->
     
@@ -111,8 +110,20 @@ class @Location
     window.Store.set 'locations', JSON.stringify locations
     return this
     
+  destroy: ->
+    storedata = JSON.parse window.Store.get 'locations'
+    locations = []
+    for l in storedata
+      if (l.id != this.id)
+        locations.push new Location(l.id, l.city, l.country, l.latitude, l.longitude)
+    
+    if window.Store.set 'locations', JSON.stringify locations
+      return true
+    else
+      return false
+    
   @find: (id) ->
     locations = JSON.parse window.Store.get 'locations'
-    for location in locations
-      return location if location.id is parseInt id
+    for l in locations
+      return new Location(l.id, l.city, l.country, l.latitude, l.longitude) if l.id is parseInt id
 

@@ -71,11 +71,9 @@ div#menu div {
   font-weight: 100;
 }
 
-div#menu div#addLocationIcon {
+div#menu div#addLocationIcon,
+div#menu div#removeLocationIcon {
   float: left;
-} 
-
-div#menu div#addLocationIcon i {
   color: $text-color;
 }
 
@@ -192,14 +190,19 @@ div#overlay i.overlaySpinner {
 
 
 div#locationSearchContainer {
-  margin-top: 70px;
+  margin-top: 50px;
   text-align: center;
   font-size: 0;
 }
-
+div#locationSearchContainer div#message {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
 div#locationSearchContainer input#locationSearchField {
   border: 5px solid #e0e0e0;
+  border-left: none;
   font-size: $font-size-m;
+  width: 50%;
   margin: 0;
   padding: 10px 10px;
 }
@@ -212,8 +215,10 @@ div#locationSearchContainer button {
 div#locationSearchContainer button i {
   font-size: $font-size-m;
 }
-div#locationSearchContainer button#useCurrentLocationButton {
-  border-right: none;
+div#locationSearchContainer button.yesnobutton {
+  width: 100px;
+}
+div#locationSearchContainer button.left {
   color: gray;
   background-color: white;
   -webkit-border-top-left-radius: $border-radius-l;
@@ -223,7 +228,7 @@ div#locationSearchContainer button#useCurrentLocationButton {
   border-top-left-radius: $border-radius-l;
   border-bottom-left-radius: $border-radius-l;
 }
-div#locationSearchContainer button#addLocationButton {
+div#locationSearchContainer button.right {
   border-left: none;
   color: gray;
   background-color: white;
@@ -308,6 +313,16 @@ a#sign_in:hover {
   color: #d0d0d0;
 }
 
+
+.title {
+  cursor: pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 
 .text_margin_left_l {
 	margin-left: $margin-xl;

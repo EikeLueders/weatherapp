@@ -4,12 +4,30 @@
   </div>
 <% else %>
   <div id="locationSearchContainer">
-    <button id="useCurrentLocationButton">
+    <div id="message">
+      Search for a single location    
+    </div>
+    <button id="useCurrentLocationButton" class="left">
       <i class="fa fa-location-arrow"></i>
     </button>
     <input id="locationSearchField" type="text" placeholder="Location...">
-    <button id="addLocationButton">
+    <button id="addLocationButton" class="right">
       <i class="fa fa-arrow-circle-o-right"></i>
     </button>
+    <br class="clear" />
+    <div id="message">
+      <br class="clear" />
+      <br class="clear" />
+      or upload a text file with multiple locations
+    </div>
+    <%= form_for :locations, :url => "/dashboard/uploadLocationsFile", :html => { :multipart => true }, :remote => true, :format => 'js' do |f| %>
+      <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %> 
+      <%= f.label :file %>
+      <%= f.file_field :file %> 
+      <!-- <div class="actions">
+        <%= f.submit %>
+       --></div>
+    <% end %>
+    
   </div>
 <% end %>

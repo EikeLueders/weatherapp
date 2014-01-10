@@ -43,6 +43,7 @@ end
 
 gem 'font-awesome-sass'
 gem 'omniauth-facebook'
+gem 'remotipart'
 
 #gem 'oauth2'
 

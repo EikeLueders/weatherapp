@@ -5,10 +5,19 @@ Weatherapp::Application.routes.draw do
   get "utilities/getReverseGeolocation"
   get "utilities/getGeolocation"
   
+  get "api/getFlickrImages", to: 'utilities#getFlickrImages'
+  get "api/getWeatherData", to: 'utilities#getWeatherData'
+  get "api/getReverseGeolocation", to: 'utilities#getReverseGeolocation'
+  get "api/getGeolocation", to: 'utilities#getGeolocation'
+  
   get 'dashboard/searchform', to: 'dashboard#show_search_form'
+  get 'dashboard/deletelocation', to: 'dashboard#show_delete_location'
   get 'dashboard/profile', to: 'dashboard#show_user_profile'
   
   get 'dashboard/addLocation', to: 'dashboard#add_location_to_user'
+  get 'dashboard/removeLocation', to: 'dashboard#remove_location'
+  
+  post 'dashboard/uploadLocationsFile', to: 'dashboard#upload_locations_file'
   
   get 'locations', to: 'locations#get_locations_by_currentuser'
   get 'user/settings', to: 'user#update_settings'

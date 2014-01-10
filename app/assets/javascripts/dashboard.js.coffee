@@ -2,8 +2,6 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
-# create global object (bad), but required for location
-
 createContainerIn = (element = 'weatherdata_current_data') ->
   $('<div></div>').addClass('container').appendTo($('#' + element))
     
@@ -41,6 +39,9 @@ objectToString = (obj, delimiter1 = '=', delimiter2 = '&') ->
   url.join(delimiter2)
   
 setupUI = ->
+  # clear up
+  $('#locations').html ''
+
   # load location list from webstorage
   locations = window.Store.get 'locations'
   if locations?
@@ -53,7 +54,6 @@ initCurrentLocation = (latitude, longitude) ->
     location = new Location(0, address.city, address.country, address.lat, address.lon).save()
     addLocationToUI location
     getWeatherForLocation location
-    
       
 addLocationToUI = (location) ->
   @addHTML = (location) ->
@@ -178,7 +178,7 @@ searchForLocationByName = (name) ->
     $.get '/utilities/getGeolocation.json?place=' + name, (location) ->
       if location isnt null
         l = 
-          city: location.address.city
+          city: if location.address.city? then location.address.city else location.address.county
           country: location.address.country
           latitude: location.lat
           longitude: location.lon
@@ -186,21 +186,29 @@ searchForLocationByName = (name) ->
         saveLocation l
         console.log location
         
-        toggleOverlayWithHeight 200
+        hideOverlay()
 
 toggleOverlayWithHeight = (height, callback) ->
   $('#overlay').css('height', height)
   $('#overlay').css('top', -height)
   if $('#overlay').attr('visible') is 'false'
     callback()
-    $('#overlay').attr 'visible', 'true'
-    $('#overlay').transition {y:"+=" + height}, 1000, 'snap', ->
-      console.log 1
-      
+    showOverlay(height)
   else
-    $('#overlay').attr 'visible', 'false'
-    $('#overlay').transition {y:"-=" + height}, 1000, 'snap', ->
-      console.log 2
+    hideOverlay(height)
+      
+showOverlay = (height) ->
+  $('#overlay').attr 'visible', 'true'
+  $('#overlay').transition {y:"+=" + height}, 1000, 'snap', ->
+    $('html').on 'click', (e) ->
+      if $(e.target).parents().index($('#overlay')) == -1# and e.target.id != 'overlay' 
+        hideOverlay()
+      
+hideOverlay = (height = $('#overlay').css('height')) ->
+  $('html').off 'click'
+  if $('#overlay').attr('visible') is 'true'
+      $('#overlay').attr 'visible', 'false'
+      $('#overlay').transition {y:"-=" + height}, 1000, 'snap', ->
 
 showLocationSearch = ->
   # clear overlay
@@ -209,10 +217,58 @@ showLocationSearch = ->
   $.get '/dashboard/searchform.html', (html) ->
     $('#overlay').html ''
     $('#overlay').append(html)
+    
+    $('#locations_file').on 'change', (e) ->
+      files = e.target.files
+      console.log(files[0])
+      
+      $('#locations_file').parent().bind 'ajax:success', (e, data, status, xhr) ->
+        console.log data
+        data = JSON.parse data
+        
+        for location in data
+          l = 
+            city: location.address.city
+            country: location.address.country
+            latitude: location.lat
+            longitude: location.lon
+            
+          saveLocation l
+        
+        hideOverlay()
+      
+      $('#locations_file').parent().submit()
+      
     $('#addLocationButton').bind 'click', ->
       searchForLocationByName($('#locationSearchField').val())
       console.log $('#locationSearchField').val()
+
+showRemoveLocationDialog = ->
+  # clear overlay
+  $('#overlay').html '<i class="fa fa-spinner fa-3x fa-spin overlaySpinner"></i>'
     
+  # get current location
+  id = $('.selectedLocation').attr('id').split('_')[1]
+  if id?
+    location = Location.find id
+    args = {id: location.id}
+  
+    $.get '/dashboard/deletelocation.html', (html) ->
+      $('#overlay').html ''
+      $('#overlay').append(html)
+      $('#removeLocationButton').bind 'click', ->
+        $.get '/dashboard/removeLocation.json?' + objectToString(args), (data) ->
+          # console.log data
+          # console.log location
+          if data.status == 'true'
+            if location.destroy()
+              setupUI()
+              getWeatherForPlace $('.selectedLocation').attr('id')
+              hideOverlay()
+            
+      $('#cancelButton').bind 'click', ->
+        hideOverlay()  
+
 showUserProfile = ->
   # clear overlay
   $('#overlay').html '<i class="fa fa-spinner fa-3x fa-spin overlaySpinner"></i>'
@@ -246,10 +302,13 @@ $ ->
   )
   
   $('#showProfileIcon i').bind 'click', ->
-    toggleOverlayWithHeight(220, showUserProfile)
+    toggleOverlayWithHeight(240, showUserProfile)
     
   $('#addLocationIcon i').bind 'click', ->
-    toggleOverlayWithHeight(200, showLocationSearch)
+    toggleOverlayWithHeight(300, showLocationSearch)
+    
+  $('#removeLocationIcon i').bind 'click', ->
+    toggleOverlayWithHeight(200, showRemoveLocationDialog)
   
 #  navigator.geolocation.getCurrentPosition load
   true

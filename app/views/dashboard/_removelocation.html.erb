@@ -1,0 +1,17 @@
+<% if not current_user %>
+  <div id="message">
+    Please log in to delete your locations    
+  </div>
+<% else %>
+  <div id="locationSearchContainer">
+    <div id="message">
+      Are you sure to delete this location?    
+    </div>
+    <button id="cancelButton" class="left yesnobutton">
+      <i class="fa fa-times"></i>
+    </button>
+    <button id="removeLocationButton" class="right yesnobutton">
+      <i class="fa fa-check"></i>
+    </button>
+  </div>
+<% end %>

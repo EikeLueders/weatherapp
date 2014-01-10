@@ -1,5 +1,6 @@
 
 require 'flickraw'
+include UtilitiesHelper
 
 class UtilitiesController < ApplicationController
 
@@ -117,24 +118,11 @@ class UtilitiesController < ApplicationController
 	end
 	
 	def getGeolocation
-    query = params[:place]
-    query << ", city"
+	  query = params[:place]
+	  json = UtilitiesHelper.getGeolocationHelper query
     
-    request = Typhoeus::Request.new(
-      "http://nominatim.openstreetmap.org/search/" + CGI::escape(query) + "?addressdetails=1&format=json",
-      method: :get,
-      headers: { Accept: "application/json" }
-    )
-    request.run
-    
-    puts request.response.body
-    
-    json = JSON.parse(request.response.body)
-    
-#    puts json
-
     respond_to do |format|
-      format.json { render json: json[0]}
+      format.json { render json: json}
     end
   end
 end
